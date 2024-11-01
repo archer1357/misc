@@ -1,0 +1,44 @@
+
+
+BaseDefenseManager.GetCurrentMissionCode()
+BaseDefenseManager.GetMissionCodeList()
+TppCrew.StartMission(30020)else
+TppCrew.StartMission(30010)end
+_.BASE_DEFENSE_TUTORIAL_MISSION=50500
+TppMission.GetMissionID()
+
+if TppMission.IsMultiPlayMission(vars.missionCode)then
+
+if TppMission.IsMultiPlayMission(vars.missionCode)then
+local e=TppNetworkUtil.IsHost()if e then
+TppMission.AbandonMission{needRestore=true}else
+if Mission.IsHostMigrationActive()then
+else
+TppMission.AbandonMission{needRestore=true}
+TppMission.StartDefenseGame(n)
+missionCode
+TppCrew.StartMission(vars.missionCode)Mission.RecreateBaseCrew()end
+function e.FinishReplayMission()Mission.ClearForceBaseCampCrewList()Mission.ClearRescueCrewInfo{missionType=TppDefine.RESCUE_CREW_MISSION_TYPE.FLAG_MISSION}if TppLocation.IsMiddleAfrica()then
+TppCrew.StartMission(30020)else
+local n=TppMission.GetMissionID()
+MissionListMenuSystem.SetCurrentMissionCode(TppDefine.MISSION_CODE_NONE)
+TppCrew.StartMission(30010)end
+function e.Abort()local n=e.GetCurrentFlagMissionName()if not n then
+return
+end
+local n=e.GetMissionIndex(n)if n==nil then
+function e.OnInit()e.messageExecTable=Tpp.MakeMessageExecTable(e.Messages())if not TppMission.IsFreeMission(vars.missionCode)then
+function e.OnMissionStart()local n=vars.missionCode
+if e.IsCoopMission(n)then
+Mission.StartVotingSystem()end
+if not e.IsSysMissionId(n)then
+MissionListMenuSystem.SetCurrentMissionCode(n)else
+ TppMission.IsInitMission(vars.missionCode)
+ TppMission.ParseMissionName(n)
+
+
+
+
+load my dll
+find replace the dofile call with my own, and save the luastate
+find game loop, make and call function that runs lua file when its been modified

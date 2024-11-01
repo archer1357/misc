@@ -1,0 +1,4 @@
+1. Goto section headers
+2. Right click anywhere in window and hit Add Section (Empty Space)
+3. Enter size, e.g. "1024 d"
+4. Right click new second Change Section Flags and only set "Is executable", "Is readable" and "Contains code"
