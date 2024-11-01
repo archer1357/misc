@@ -1,0 +1,193 @@
+
+OpenRowsNum:=8
+OpenColsNum:=8
+OpenChestsNum:=100
+
+BuyChestsNum:=100
+BuyStacksNum:=64
+
+GuiClose(GuiHwnd) {
+    Gui, Destroy    ;return 0
+}
+
+GuiEscape(GuiHwnd) {
+    Gui, Destroy
+}
+
+ButtonOkay() {
+    Gui, Submit, NoHide
+    Gui, Destroy
+}
+
+BuyChests(ChestsNum,StacksNum) {
+    global BreakLoop
+    t2:=200
+    t3:=250
+
+    chests_num:=ChestsNum
+    num_of_stacks:=StacksNum
+
+    actual_num_of_stacks:=(100 // chests_num) * num_of_stacks
+
+    Sleep 5000
+
+    bla:=100*num_of_stacks
+    count:=0
+
+    while(BreakLoop = 0 && count < bla) {
+
+        count2:=count+chests_num
+
+        if(count2 >= bla) {
+            chests_take:=bla-count
+        } else {
+            chests_take:=chests_num
+        }
+
+        count:=count2
+
+        ;Sleep t2 ;xdotool keydown shift
+        Sleep t3
+        Click, +
+        ;Sleep t2 ;xdotool keyup shift
+
+        Sleep t2
+        MouseMove, 850,300, 0, R 
+
+        Sleep t3
+        Click,
+
+        Sleep t3
+        Send chests_take
+
+        Sleep t2
+        MouseMove, 0,100, 0, R 
+
+        Sleep t3
+        Click,
+
+        Sleep t3
+        MouseMove, -850,-400, 0, R
+    }
+    
+    if(BreakLoop = 0) {
+        SoundPlay, .\completed.mp3
+    }
+}
+
+OpenChests(RowsNum,ColsNum,ChestsNum) {
+    global BreakLoop
+    
+    rows:=RowsNum ;8
+    cols:=ColsNum ;8
+    stk:=ChestsNum ;100
+    
+    cell_size:=64
+    troop_pos_x:=150
+    troop_pos_y:=250
+
+    t1:=280 ;150
+    t2:=300 ;200
+    t3:=330 ;300
+
+    row_width:=cols*cell_size
+
+    BreakLoop := 0
+    i:=0
+
+    Sleep 5000
+
+    while(BreakLoop = 0 && i < rows) {
+        j:=0
+        
+        while(BreakLoop = 0 && j < cols) {
+            k:=0
+            
+            while(BreakLoop = 0 && k < stk) {
+                Sleep t2
+                Click, right
+                
+                Sleep t3
+                MouseMove, troop_pos_x, troop_pos_y, 0, R 
+                
+                Sleep t3
+                Click, 2
+                
+                Sleep t2
+                Send ff
+                
+                Sleep t1
+                MouseMove, -troop_pos_x, -troop_pos_y, 0, R
+                
+                k+=1
+            }
+            
+            xx:=-j*cell_size
+            yy:=-i*cell_size
+            
+            Sleep 300
+            MouseMove, xx,yy, 0, R 
+            
+            Sleep 500
+            Click,
+            
+            Sleep 1000
+            Click,
+            
+            Sleep 1000
+            MouseMove, -xx,-yy, 0, R
+                    
+            Sleep 1000
+            MouseMove, cell_size,0, 0, R
+            
+            j+=1
+        }
+        
+        Sleep 1000
+        MouseMove, -row_width,cell_size, 0, R
+
+        i+=1
+    }
+
+    if(BreakLoop = 0) {
+        SoundPlay, .\completed.mp3
+    }
+}
+
+F3::
+Gui, Destroy
+SoundPlay, Nothing
+BreakLoop = 1
+return
+
++F6::
+Gui, Destroy
+Gui, New,, Buy Chests
+Gui, Add, Text,, Chests
+Gui, Add, Edit,W30 Center ys vBuyChestsNum, %BuyChestsNum% ;100
+Gui, Add, Text, ys, Stacks
+Gui, Add, Edit,W30 Center ys vBuyStacksNum, %BuyStacksNum% ;64
+Gui, Add, Button, gButtonOkay Default ys, Okay
+Gui, Show  
+return
+
+F6::
+BuyChests(BuyChestsNum,BuyStacksNum)
+return
+
++F5::
+Gui, Destroy
+Gui, New,, Open Chests
+Gui, Add, Text, , Chests
+Gui, Add, Edit, vOpenChestsNum W30 Center ys, %OpenChestsNum% ;100
+Gui, Add, Text, ys, Rows
+Gui, Add, Edit, vOpenRowsNum W30 Center ys, %OpenRowsNum% ;8
+Gui, Add, Text, ys, Cols
+Gui, Add, Edit, vOpenColsNum W30 Center ys, %OpenColsNum% ;8
+Gui, Add, Button, gButtonOkay Default ys, Okay
+Gui, Show  
+return
+
+F5::
+OpenChests(OpenRowsNum,OpenColsNum,OpenChestsNum)
+return
