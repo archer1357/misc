@@ -1,0 +1,153 @@
+int main2() {
+  INPUT ip;
+  ip.type = INPUT_KEYBOARD;
+  ip.ki.wScan = 0;
+  ip.ki.time = 0;
+  ip.mi.time = 0;
+
+
+  ip.ki.dwExtraInfo = 0;
+
+  ip.mi.mouseData = 0;
+  ip.mi.dwExtraInfo = 0;
+
+  bool pressed=false;
+
+
+  while(1) {
+    short kp=GetAsyncKeyState(VK_F10);
+
+    if((1 << 16) & kp) {
+      break;
+    }
+
+
+    if(isWindowOpen("Ace of Spades")) {
+      // if(!pressed) {
+        // ip.type = INPUT_MOUSE;
+        // ip.mi.dwFlags  = MOUSEEVENTF_LEFTDOWN;
+        // SendInput(1, &ip, sizeof(INPUT));
+
+        ip.type = INPUT_MOUSE;
+        ip.mi.dwFlags  = MOUSEEVENTF_RIGHTDOWN;
+        SendInput(1, &ip, sizeof(INPUT));
+
+        ip.type = INPUT_KEYBOARD;
+        ip.ki.wVk = VK_W;
+        ip.ki.dwFlags = 0; // 0 for key press
+        SendInput(1, &ip, sizeof(INPUT));
+
+        // ip.type = INPUT_KEYBOARD;
+        // ip.ki.wVk = VK_RETURN;
+        // ip.ki.dwFlags = 0; // 0 for key press
+        // SendInput(1, &ip, sizeof(INPUT));
+
+        // ip.type = INPUT_KEYBOARD;
+        // ip.ki.wVk = VK_SPACE;
+        // ip.ki.dwFlags = 0; // 0 for key press
+        // SendInput(1, &ip, sizeof(INPUT));
+
+        // ip.type = INPUT_KEYBOARD;
+        // ip.ki.wVk = VK_CONTROL;
+        // ip.ki.dwFlags = 0; // 0 for key press
+        // SendInput(1, &ip, sizeof(INPUT));
+
+        // ip.type = INPUT_MOUSE;
+        // ip.mi.dwFlags =MOUSEEVENTF_MOVE|MOUSEEVENTF_ABSOLUTE;
+        // ip.mi.dx = 0;
+        // ip.mi.dy = 0;
+        // SendInput(1, &ip, sizeof(INPUT));
+
+        // mouse_event(MOUSEEVENTF_MOVE,cos(timer())*160,0.0,0,0);
+
+        pressed=true;
+        // }
+        // } else
+        // if (pressed)
+        // {
+
+
+
+        pressed=false;
+    }
+
+    Sleep(300); // pause for 1 second
+
+    if(isWindowOpen("Ace of Spades")) {
+      // ip.type = INPUT_MOUSE;
+      // ip.mi.dwFlags  = MOUSEEVENTF_LEFTUP;
+      // SendInput(1, &ip, sizeof(INPUT));
+
+      // ip.type = INPUT_MOUSE;
+      // ip.mi.dwFlags  = MOUSEEVENTF_RIGHTUP;
+      // SendInput(1, &ip, sizeof(INPUT));
+
+      // ip.type = INPUT_KEYBOARD;
+      // ip.ki.wVk = VK_W;
+      // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+      // SendInput(1, &ip, sizeof(INPUT));
+
+      // ip.type = INPUT_KEYBOARD;
+      // ip.ki.wVk = VK_RETURN;
+      // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+      // SendInput(1, &ip, sizeof(INPUT));
+
+      // ip.type = INPUT_KEYBOARD;
+      // ip.ki.wVk = VK_CONTROL;
+      // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+      // SendInput(1, &ip, sizeof(INPUT));
+
+      // ip.type = INPUT_KEYBOARD;
+      // ip.ki.wVk = VK_SPACE;
+      // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+      // SendInput(1, &ip, sizeof(INPUT));
+    }
+  }
+
+  ip.type = INPUT_MOUSE;
+  ip.mi.dwFlags  = MOUSEEVENTF_RIGHTUP;
+  SendInput(1, &ip, sizeof(INPUT));
+
+  // ip.type = INPUT_MOUSE;
+  // ip.mi.dwFlags  = MOUSEEVENTF_LEFTUP;
+  // SendInput(1, &ip, sizeof(INPUT));
+
+  ip.type = INPUT_KEYBOARD;
+  ip.ki.wVk = VK_W;
+  ip.ki.dwFlags = KEYEVENTF_KEYUP;
+  SendInput(1, &ip, sizeof(INPUT));
+
+  // ip.type = INPUT_KEYBOARD;
+  // ip.ki.wVk = VK_RETURN;
+  // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+  // SendInput(1, &ip, sizeof(INPUT));
+
+
+  // ip.type = INPUT_KEYBOARD;
+  // ip.ki.wVk = VK_CONTROL;
+  // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+  // SendInput(1, &ip, sizeof(INPUT));
+
+  // ip.type = INPUT_KEYBOARD;
+  // ip.ki.wVk = VK_SPACE;
+  // ip.ki.dwFlags = KEYEVENTF_KEYUP;
+  // SendInput(1, &ip, sizeof(INPUT));
+  return 0;
+}#include "timer.h"
+bool isWindowOpen(const char *caption) {
+ HWND foreground = GetForegroundWindow();
+
+ if(!foreground)  {
+   return false;
+ }
+
+ char window_title[256];
+ GetWindowText(foreground, window_title, 256);
+ // printf("%s\n",window_title);
+
+ if(0!=strcmp(caption,window_title)) {
+   return false;
+ }
+
+ return true;
+}
