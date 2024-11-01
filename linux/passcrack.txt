@@ -1,0 +1,11 @@
+
+ hashcat   -a 1 -m 11600 = 7-Zip hash.txt dict.txt dict.txt
+ hashcat   -a 0 -m 11600 = 7-Zip hash.txt dict.txt dict.txt
+ 
+
+./7z2hashcat.pl  dhm.7z  > ../hash.txt
+/usr/local/bin/hashcat -a 0 -m 11600 hash5.txt dict.txt
+/usr/local/bin/hashcat -a 1 -m 11600 hash.txt dict.txt dict.txt
+
+./pylzma-ng/7z2john.py test.7z > testhash.txt
+john  --wordlist=dict.txt -format=7z-opencl hash5.txt

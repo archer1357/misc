@@ -1,0 +1,21 @@
+mingw-w64-x86_64-tcl mingw-w64-x86_64-nodejs 
+mingw-w64-x86_64-gcc mingw-w64-x86_64-emacs
+mingw-w64-x86_64-make
+git wget
+mingw-w64-x86_64-gnu-cobol-svn
+automake
+svn
+
+
+mingw-w64-x86_64-nasm
+mingw-w64-i686-gcc
+
+
+
+mingw-w64-x86_64-toolchain
+mingw-w64-i686-toolchain
+mingw-w64-i686-nasm
+mingw-w64-x86_64-libjpeg-turbo
+
+msys/msys2-w32api-headers
+msys/msys2-w32api-runtime

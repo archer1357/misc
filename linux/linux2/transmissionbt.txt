@@ -1,0 +1,58 @@
+sudo pacman -S --needed transmission-remote-cli adns-python python2-geoip
+
+sudo systemctl enable transmission.service
+sudo systemctl start transmission.service
+
+$HOME/.config/transmission-daemon
+$HOME/.config/transmission-cli
+
+mkdir -p /mnt/shared/transmission/resume /mnt/shared/transmission/torrents
+
+sudo ln -s /mnt/shared/transmission/resume /var/lib/transmission/.config/transmission-daemon/resume 
+sudo ln -s /mnt/shared/transmission/torrents /var/lib/transmission/.config/transmission-daemon/torrents 
+
+sudo sed -i "s/\(\"download-dir\": \"\).*\(\",\)/\1\/mnt\/shared\/transmission\/downloads\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"rpc-whitelist\": \"\).*\(\",\)/\1\*\.\*\.\*\.\*\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"peer-port\": \).*\(,\)/\149999\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"speed-limit-down\": \).*\(,\)/\1155\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"speed-limit-down-enabled\": \).*\(,\)/\1true\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"speed-limit-up\": \).*\(,\)/\122\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"speed-limit-up-enabled\": \).*\(,\)/\1true\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "N;s/\n}/,\n    \"watch-dir\": \"\/mnt\/shared\/transmission\/watch\",\n    \"watch-dir-enabled\": true\n}/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"alt-speed-down\": \).*\(,\)/\1256\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"alt-speed-up\": \).*\(,\)/\136\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"alt-speed-enabled\": \).*\(,\)/\1true\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"alt-speed-time-enabled\": \).*\(,\)/\1true\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"alt-speed-time-begin\": \).*\(,\)/\160\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+sudo sed -i "s/\(\"alt-speed-time-end\": \).*\(,\)/\1360\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+#sudo sed -i "s/\(\"download-queue-size\": \).*\(,\)/\110\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json 
+
+sudo sed -i "s/\(\"download-queue-enabled\": \).*\(,\)/\1false\2/g" /var/lib/transmission/.config/transmission-daemon/settings.json
+
+#sudo ln -s /mnt/shared/transmission /var/lib/transmission/.config/transmission-daemon
+sudo ln -s /mnt/shared/transmission/downloads /mnt/shared/downloads
+sudo ln -s /mnt/shared/transmission/watch /mnt/shared/watch
+
+==============
+
+sudo pacman -S --needed autoconf automake pkg-config intltool 
+
+wget https://github.com/transmission/transmission/archive/2.84.tar.gz -O transmission-2.84.tar.gz
+tar -xvzf transmission-2.84.tar.gz
+cd transmission-2.84
+rm ./m4/glib-gettext.m4
+./autogen.sh  --prefix=/usr/local --without-gtk --enable-lightweight
+make
+make install
+
+sudo sed -i "s/\(ExecStart=\/usr\/\)\(.*\)/\1local\/\2/g" /usr/lib/systemd/system/transmission.service
+sudo mkdir -p /home/transmission/.config/transmission-daemon/
+sudo chown transmission -R /home/transmission
+sudo chmod 700 -R /home/transmission
+
+sudo ln -sf /var/lib/transmission/.config/transmission-daemon/settings.json /home/transmission/.config/transmission-daemon/
+cp /var/lib/transmission/.config/transmission-daemon/settings.json /home/transmission/.config/transmission-daemon/
+
+=============
+
+ln -sf  /mnt/shared/transmission /home/transmission/.config/transmission-daemon

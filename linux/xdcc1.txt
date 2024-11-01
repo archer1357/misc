@@ -1,0 +1,32 @@
+pacman -S --needed --noconfirm irssi
+
+
+	mkdir -p /mnt/shared/xdcc
+	
+	#/SET dcc_autoresume ON
+	#/SET dcc_autoget ON
+	#/SET dcc_upload_path /mnt/shared/xdcc
+	#/SET dcc_download_path /mnt/shared/xdcc
+	#/SET nick mynick123
+	
+	#/server irc.servername.net
+	
+	#/msg nickserv register mypass my@email.com
+	#/msg NickServ confirm THECODE
+	
+	#/mgs NickServ IDENTIFY THEPASS
+	#/join THECHANNELNAME
+    
+
+    #/server irc.abjects.net
+    #/join THECHANNEL
+    #/join #THECHAT
+
+
+    #/SET nick THENICK
+
+    #/msg nickserv register mypass THEEMAIL
+    #/msg NickServ confirm THECODE
+
+
+

@@ -1,0 +1,26 @@
+pacman -S --needed --noconfirm amule
+
+function setup_amule() {
+	#echo -n pass | md5sum | cut -d ' ' -f 1
+	#Port=4662
+	#UDPPort=4672
+	
+	systemctl enable amuled
+	systemctl enable amuleweb
+	
+	systemctl start amuled
+	systemctl start amuleweb
+	
+	mkdir -p /mnt/shared/amule/Incoming /mnt/shared/amule/Temp
+
+	sed -i "s/\(TempDir=\).*/\1\/mnt\/shared\/amule\/Temp/g" /var/lib/amule/.aMule/amule.conf
+	sed -i "s/\(IncomingDir=\).*/\1\/mnt\/shared\/amule\/Incoming/g" /var/lib/amule/.aMule/amule.conf
+	sed -i "s/\(MaxUpload=\).*/\122/g" /var/lib/amule/.aMule/amule.conf
+	sed -i "s/\(MaxDownload=\).*/\1200/g" /var/lib/amule/.aMule/amule.conf
+	sed -i "s/\(AcceptExternalConnections=\)0/\11/g" /var/lib/amule/.aMule/amule.conf
+	sed -i "s/\(ECPassword=\).*/\11a1dc91c907325c69271ddf0c944bc72/g" /var/lib/amule/.aMule/amule.conf
+
+	chown amule:amule -R /var/lib/amule
+	
+	sudo -u amule amuleweb --write-config --password=pass --admin-pass=pass
+}

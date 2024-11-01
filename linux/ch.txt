@@ -1,0 +1,222 @@
+sudo apt-get install qemu qemu-user qemu-user-static binfmt-support debootstrap binutils
+
+
+sudo mkdir /mychroot
+sudo mkdir /opt/mnt/
+sudo mount --bind /mychroot /opt/mnt/
+
+cd /opt/mnt/
+
+#sudo debootstrap --foreign --arch i386 sid ./ http://httpredir.debian.org/debian
+sudo debootstrap --foreign --arch i386 stretch  ./ http://deb.debian.org/debian/
+
+echo '#!/bin/bash
+mkdir /tmp/mnt/
+mount --bind /chroot /tmp/mnt/
+mount -t sysfs sys /tmp/mnt/sys/
+mount -t proc proc /tmp/mnt/proc/
+mount --bind /dev /tmp/mnt/dev/
+mount --bind /dev/pts /tmp/mnt/dev/pts/
+mount --bind /dev/shm /tmp/mnt/dev/shm/
+mkdir /tmp/mnt/mainfs
+mount --bind / /tmp/mnt/mainfs/
+chroot /tmp/mnt/ /usr/sbin/sshd' > /usr/bin/chrootmount
+
+sudo chmod 755 /usr/bin/chrootmount
+
+
+sudo mount -t sysfs sys sys/
+sudo mount -t proc proc proc/
+sudo mount --bind /dev dev/
+sudo mount --bind /dev/pts dev/pts/
+sudo mount --bind /dev/shm dev/shm/
+sudo cp /usr/bin/qemu-i386-static usr/bin/
+
+sudo chroot . /debootstrap/debootstrap --second-stage
+
+sudo chroot ./ /bin/bash --login -i
+
+export LANGUAGE="C"
+export LC_ALL="C"
+unset HOME
+export HOME=/root/
+source ~/.bashrc
+source ~/.profile
+
+sed -i 's/\(deb.*\)/\1 contrib non-free/g' /etc/apt/sources.list
+apt-get update
+
+
+apt-get install openssh-server
+mount -t linprocfs linproc /compat/linux/proc
+
+
+
+
+sudo debootstrap --arch i386 sid . http://deb.debian.org/debian/
+
+debootstrap --foreign --arch i386 sid ./ http://httpredir.debian.org/debian
+
+
+If it’s only 32-bit (i386), then you can achieve the same thing with QEMU and a chroot environment, WITHOUT buying a license for ExaGear. If it’s 64-bit, however, then they’ve actually achieved something unique. AMD64 QEMU is currently way too broken to run a stable chroot.
+
+Edit: Looked it up and ExaGear is only 32-bit; the same thing can be achieved for free using debootstrap/binfmt/QEMU/chroot.
+
+Step 1: Run this command
+#
+apt-get update && apt-get install qemu qemu-user qemu-user-static binfmt-support debootstrap binutils
+
+Step 2: Create a folder for your chroot.
+Tip: Use mount –bind for proper df support within the environment (optional)
+#
+mkdir /chroot
+mkdir /tmp/mnt/
+mount –bind /chroot /tmp/mnt/
+
+Step 3: Run debootstrap in the chroot dir. This can be done with Debian or Ubuntu, but for this tutorial I’ll be using Debian.
+#
+cd /tmp/mnt/
+debootstrap –foreign –arch i386 sid ./ http://httpredir.debian.org/debian
+
+Step 4: The previous step only ran the first half of debootstrap. Now we need to mount a few basic directories and copy the static version of qemu-i386 into the environment. Run the following:
+#
+mount -t sysfs sys sys/
+mount -t proc proc proc/
+mount –bind /dev dev/
+mount –bind /dev/pts dev/pts/
+mount –bind /dev/shm dev/shm/
+cp /usr/bin/qemu-i386-static usr/bin/
+
+Step 5: Now we execute the chroot for the first time and run the second half of debootstrap.
+#
+chroot . /debootstrap/debootstrap –second-stage
+
+Step 6: The environment is complete! Now we enter the environment.
+#
+chroot ./ /bin/bash --login -i
+
+Tips:
+A few environment variables may be set wrong when first entering the environment. You can fix it with the following:
+#
+export LANGUAGE=”C”
+export LC_ALL=”C”
+unset HOME
+export HOME=/root/
+source ~/.bashrc
+source ~/.profile
+
+The easiest way to do this so you don’t have to set those variables every time you chroot in is to install an SSH server and configure it to an alternate port than the main one Raspbian is running. That way OpenSSH will set up your environment variables automatically. If you go that route then your initial command should be:
+chroot ./ /usr/sbin/sshd
+
+Then just SSH localhost with the alternate port. Keep in mind you’ll need to change a couple variables in sshd_config besides the port, such as permit root login and x11 forwarding. If set up properly you should be able to connect to your environment + run graphical applications with
+#
+ssh -xY root@localhost -p myportnumber
+
+You will have to remount the chroot + special directories on every reboot. You can do this manually every time or make things easier by creating a script.
+
+To make the script:
+#
+nano /usr/bin/chrootmount
+
+This will open nano and tell it to create a file in /usr/bin. Now enter the following into the script:
+
+#!/bin/bash
+mkdir /tmp/mnt/
+mount –bind /chroot /tmp/mnt/
+mount -t sysfs sys /tmp/mnt/sys/
+mount -t proc proc /tmp/mnt/proc/
+mount –bind /dev /tmp/mnt/dev/
+mount –bind /dev/pts /tmp/mnt/dev/pts/
+mount –bind /dev/shm /tmp/mnt/dev/shm/
+chroot /tmp/mnt/ /usr/sbin/sshd
+
+Now save the script (Ctrl+X, Y) and chmod it to 755 so it’s executable after that you should be able to mount your chroot + run your SSH server on boot by just running chrootmount.
+
+If you created the script in the previous tip and want to make it even easier by having it run automatically on boot, we can do this with a systemd service.
+#
+nano /etc/systemd/system/chrootmount.service
+
+This will open nano once more. Now add the following:
+
+[Unit]
+Description = mounts chroot on boot
+
+[Service]
+Type=one-shot
+ExecStart=/usr/bin/chrootmount
+
+[Install]
+WantedBy=multi-user.target
+
+Save the script (Ctrl+X, Y) and enable it with
+#
+systemctl enable chrootmount.service
+
+Now the system will automatically execute the chroot mount process + run the ssh server on every boot. So on boot you’ll be able to access your environment by just opening terminal and typing:
+
+ssh -xY root@localhost -p myportnumber
+
+If you want to access your main filesystem from within the environment, you’ll need to bind mount it. Add this to your chrootmount script:
+mkdir /tmp/mnt/mainfs
+mount –bind / /tmp/mnt/mainfs/
+
+Enjoy your free x86 support on the RPi!
+
+Ville Salminen | August 17, 2017 at 6:01 pm | Reply
+Thanks a lot, Mitchell!
+
+Mitchell Gosse | August 17, 2017 at 8:26 pm | Reply
+No problem 🙂
+
+One small edit by the way: thanks to my autocorrect the type in the systemd service is wrong.
+
+It should be oneshot all one word, not one-shot
+
+Sam | August 30, 2017 at 4:59 am | Reply
+Hi Mitchell, where am I wrong? I’m using Stretch but I can’t run x86 ssh and I get errors with the mount command.
+
+Mitchell Gosse | September 23, 2017 at 9:18 am | Reply
+Apologies for the month-late reply.
+
+Did you set your x86 ssh server to run on a different port from your host server?
+
+Also, what output do you get in the terminal when you try to run it?
+
+Mitchell Gosse | September 23, 2017 at 9:21 am | Reply
+Edit:
+Also, what errors are you getting with the mount command?
+
+misirli | September 1, 2017 at 5:07 am | Reply
+I’m trying to mount, but I can’t:
+
+pi@raspberrypi:~ $ mount –bind /chroot /tmp/mnt/
+
+Usage:
+mount [-lhV]
+mount -a [options]
+mount [options] [–source] | [–target]
+
+(…)
+
+Mitchell Gosse | September 23, 2017 at 9:20 am | Reply
+It’s two -‘s on the bind command, not one. The font on this site makes it look like a singular dash unfortunately.
+
+Justa Poster | May 31, 2018 at 8:13 pm | Reply
+The difference being here, Exagear is very optimized and much faster than qemu-i386.
+
+I’ve been using qemu-i386 on ARM since the late 2000’s and last used it on a Nokia N900, of course it worked fine, but my curiosity spiked to try Exagear and the speed difference is noticeable.
+
+Amir | October 21, 2017 at 10:33 pm | Reply
+At command sudo chroot . /debootstrap/debootstrap –second-stage:
+I: Keyring file not available at /usr/share/keyrings/debian-archive-keyring.gpg; switching to https mirror https://deb.debian.org/debian
+I: Installing core packages…
+W: Failure trying to run: dpkg –force-depends –install /var/cache/apt/archives/base-passwd_3.5.44_i386.deb
+W: See //debootstrap/debootstrap.log for details
+
+Please help.
+
+Alex | December 16, 2017 at 1:29 pm | Reply
+You can not actually achieve the same thing with QEMU because ExaGear is much more faster. ExaGear gives 80% of native speed.
+
+JimmyChonga | January 14, 2018 at 11:59 pm | Reply
+Does this work on RetroPie like it does on Raspbian? Because I would love to have some Game Cube games on my arcade machine.

@@ -1,0 +1,21 @@
+
+
+
+	chown mysql:mysql -R /var/lib/mysql
+	chown mysql:mysql -R /var/run/mysqld
+	
+	systemctl enable mysqld
+	#systemctl start mysqld
+	
+	#mysql --user=root -e "UPDATE mysql.user SET Password=PASSWORD('pass') WHERE User='root';\nDELETE FROM mysql.user WHERE User='';\nDELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');\nDROP DATABASE test;\nDELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';\nFLUSH PRIVILEGES;\nGRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.%' IDENTIFIED BY 'pass' WITH GRANT OPTION;"
+	#mysql_upgrade -u root -ppass
+	#mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -ppass mysql
+
+	sed -i 's/;\(extension=mysql.so\)/\1/g' /etc/php/php.ini
+
+
+
+
+    
+lighttpd fcgi php php-cgi
+mariadb

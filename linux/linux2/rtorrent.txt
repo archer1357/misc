@@ -1,0 +1,66 @@
+
+pacman -S --needed --noconfirm lighttpd php php-cgi fcgi
+
+function setup_lighttp() {
+	echo -e '\nserver.modules += ( "mod_fastcgi" )\nserver.modules += ( "mod_scgi" )\n' >> /etc/lighttpd/lighttpd.conf
+	echo -e '\nscgi.server = ( "/RPC2" =>\n\t( "127.0.0.1" =>\n\t\t(\n\t\t\t"host" => "127.0.0.1",\n\t\t\t"port" => 5000,\n\t\t\t"check-local" => "disable"\n\t\t)\n\t)\n)\n' >> /etc/lighttpd/lighttpd.conf
+	echo -e '\nfastcgi.server = ( ".php" => ((\n\t"bin-path" => "/usr/bin/php-cgi",\n\t"socket" => "/tmp/php.socket"\n)))\n' >> /etc/lighttpd/lighttpd.conf
+	
+	systemctl enable lighttpd
+	systemctl start lighttpd
+}
+
+pacman -S --needed --noconfirm rtorrent
+
+function setup_rtorrent() {
+	useradd -m -U -s /bin/bash rtorrent
+
+	cp /usr/share/doc/rtorrent/rtorrent.rc /home/rtorrent/.rtorrent.rc
+    
+	sudo ln -s /mnt/shared/rtorrent/.rtorrent.rc /home/rtorrent/.rtorrent.rc    
+    #sudo ln -s /home/rtorrent/.rtorrent.rc /mnt/shared/rtorrent/.rtorrent.rc 
+    
+    mkdir -p /mnt/shared/rtorrent/session /mnt/shared/rtorrent/downloads /mnt/shared/rtorrent/watch
+	
+	sed -i "s/#\(upload_rate = \).*/\111/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(download_rate = \).*/\155/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(directory = \).*/\1\/mnt\/shared\/rtorrent\/downloads/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(session = \).*/\1\/mnt\/shared\/rtorrent\/session/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(schedule = watch[^=]*=\)\.\(.*\)/\1\/mnt\/shared\/rtorrent\2/g" $HOME/.rtorrent.rc	
+	sed -i "s/#\(schedule = untied_directory.*\).*/\1/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(schedule = low_diskspace.*\).*/\1/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(use_udp_trackers = \).*/\1yes/g" $HOME/.rtorrent.rc
+	sed -i "s/#\(port_range = \).*/\149998-49998/g" $HOME/.rtorrent.rc
+    
+    echo 'scgi_port = localhost:5000' >> $HOME/.rtorrent.rc
+   
+    echo -e '[Unit]\nDescription=rTorrent\nRequires=network.target local-fs.target\n\n[Service]\nType=forking\nRemainAfterExit=yes\nKillMode=none\nUser=rtorrent\nExecStartPre=/usr/bin/rm -f /mnt/shared/rtorrent/session/rtorrent.lock\nExecStart=/usr/bin/tmux new-session -s rt -n rtorrent -d rtorrent\nExecStop=/usr/bin/tmux send-keys -t rt:rtorrent C-q\nWorkingDirectory=/home/rtorrent/\n\n[Install]\nWantedBy=default.target' > /etc/systemd/system/rt.service
+
+	systemctl enable rt
+	systemctl start rt
+    
+    sudo ln -s /mnt/shared/rtorrent/downloads /mnt/shared/downloads2
+    sudo ln -s /mnt/shared/rtorrent/watch /mnt/shared/watch2
+}
+
+function setup_rutorrent() {
+	git clone https://github.com/Novik/rutorrent.git /srv/http/rutorrent
+
+	#chown -R http /srv/http/rutorrent
+	
+	sudo ln -sf /mnt/shared/rtorrent/rutorrent /srv/http/rutorrent
+	#sudo ln -s /srv/http/rutorrent /mnt/shared/rtorrent/rutorrent
+	
+	mkdir -p /mnt/shared/rtorrent/share/settings /mnt/shared/rtorrent/share/torrents /mnt/shared/rtorrent/share/users
+	
+	sed -i "s/\(open_basedir = .*\)/\1:\/srv\/http\/rutorrent\/conf\//g" /etc/php/php.ini
+	sed -i "s/\(open_basedir = .*\)/\1:\/srv\/http\/rutorrent\/php\//g" /etc/php/php.ini
+	sed -i "s/\(open_basedir = .*\)/\1:\/srv\/http\/rutorrent\//g" /etc/php/php.ini
+	sed -i "s/\(open_basedir = .*\)/\1:\/bin\/:\/usr\/bin\//g" /etc/php/php.ini
+	sed -i "s/\(open_basedir = .*\)/\1:\/mnt\/shared\//g" /etc/php/php.ini
+		
+	sed -i "s/\(\$tempDirectory = \).*/\1'\/mnt\/shared\/rtorrent\/tmp\/';/g" /srv/http/rutorrent/conf/config.php
+	sed -i "s/\(\$profilePath = \).*/\1'\/mnt\/shared\/rtorrent\/share\/';/g" /srv/http/rutorrent/conf/config.php
+	sed -i "s/\(\$log_file = \).*/\1'\/mnt\/shared\/rtorrent\/tmp\/errors.log';/g" /srv/http/rutorrent/conf/config.php
+    
+}

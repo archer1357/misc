@@ -1,0 +1,42 @@
+sudo pacman -S --needed deluge python2-service-identity boost-libs python2-mako
+
+sudo systemctl enable deluged.service
+sudo systemctl enable deluge-web.service
+
+sudo systemctl start deluged.service
+sudo systemctl start deluge-web.service
+
+http://alarmpi:8112
+
+58846
+
+sudo sed -i "s/\(\"download_location\": \"\).*\(\",\)/\1\/mnt\/shared\/downloads\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"autoadd_location\": \"\).*\(\",\)/\1\/mnt\/shared\/watch2\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"torrentfiles_location\": \"\).*\(\",\)/\1\/mnt\/shared\/torrents\2/g" /srv/deluge/.config/deluge/core.conf
+
+
+sudo sed  "s/\(\"autoadd_enable\": \).*\(,\)/\1true\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"del_copy_torrent_file\": \).*\(,\)/\1true\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"max_upload_speed\": \).*\(,\)/\122\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"max_download_speed\": \).*\(,\)/\1155\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"max_active_downloading\": \).*\(,\)/\1-1\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"max_active_seeding\": \).*\(,\)/\1-1\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"max_active_limit\": \).*\(,\)/\1-1\2/g" /srv/deluge/.config/deluge/core.conf
+
+sudo sed -i "s/\(\"random_outgoing_ports\": \).*\(,\)/\1false\2/g" /srv/deluge/.config/deluge/core.conf
+sudo sed -i "s/\(\"random_port\": \).*\(,\)/\1false\2/g" /srv/deluge/.config/deluge/core.conf
+
+sudo sed -i "s/\(\"extract_path\": \"\).*\(\"\)/\1\/mnt\/shared\/unpack\2/g" /srv/deluge/.config/deluge/extractor.conf
+
+
+sudo sed -i "s/\(\"default_daemon\": \"\).*\(\"\)/\1127\.0\.0\.1:58846\2/g" /srv/deluge/.config/deluge/web.conf
+ "": "", 
+ 6881, 
+    6891
+	
+	
+	echo "deluge:deluge:10" >> /srv/deluge/.config/deluge/auth
+	
+	
+	====
+ln -sf  /mnt/shared/deluge /srv/deluge

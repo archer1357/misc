@@ -1,0 +1,13 @@
+echo -e '[Unit]\nDescription=my transmission daemon\nRequires=network.target local-fs.target\n\n[Service]\nType=forking\nRemainAfterExit=yes\nKillMode=none\nUser=%i\nExecStartPre=\nExecStart=/usr/local/bin/transwrap.sh\n#ExecStart=/usr/bin/transmission-daemon\nExecStop=/usr/bin/transmission-remote --exit\n#ExecStop=/usr/bin/killall transmission-daemon\nWorkingDirectory=/home/%i/\n\n[Install]\nWantedBy=default.target\n' > /etc/systemd/system/my-transmission-daemon.service
+
+
+
+
+
+
+
+
+echo -e '#!/bin/zsh\nkillall transmission-daemon 2> /dev/null\ntransmission-daemon --foreground --log-info 2>&1 | while read line; do\n\techo $line |\n\t\tgrep -v "announcer.c:\|platform.c:\|announce done (tr-dht.c:" |\n\t\tgrep -v "Saved.*variant.c:" |\n\t\twhile read line; do\n\t\t\techo $line | grep -q "Queued for verification (verify.c:" &&\n\t\t\t\tnotify-send --app-name="Transmission Started" "${line#* * }"\n\t\t\techo $line | grep -q "changed from .Incomplete. to .Complete." &&\n\t\t\t\tnotify-send --app-name="Transmission Complete" "${line#* * }"\n\t\t\techo $line | systemd-cat --identifier="TransWrap" --priority=5\n\t\tdone 2>&1 > /dev/null\n\tdone&disown' > /usr/local/bin/transwrap.sh
+
+sudo chmod +xr /usr/local/bin/transwrap.sh
+cat /usr/local/bin/transwrap.sh

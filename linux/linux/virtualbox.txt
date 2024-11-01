@@ -1,0 +1,11 @@
+
+sudo pacman -S --needed virtualbox virtualbox-host-dkms virtualbox-ext-vnc linux-headers qt4 dkms
+
+
+
+
+	#systemctl start dkms
+	#systemctl enable dkms
+	#dkms install vboxhost/$(pacman -Q virtualbox|awk {'print $2'}|sed 's/\-.\+//') -k $(uname -rm|sed 's/\ /\//')
+	#dkms autoinstall
+	#usermod -a -G vboxusers $mylogin

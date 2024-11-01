@@ -1,0 +1,4 @@
+#!/bin/sh
+xterm -hold -e 'xset s off && xset -dpms && xset q'
+
+xset s off -dpms q

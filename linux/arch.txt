@@ -1,0 +1,58 @@
+
+qemu qemu-arch-extra 
+qemu-launcher gnome-boxes virt-manager
+
+
+
+
+xrandr -s 0
+
+
+  
+rw,nosuid,dev,exec,auto,nouser,async,nofail,acl
+
+
+rw,nosuid,nodev,exec,auto,nouser,async
+
+
+
+tmpfs   /tmp         tmpfs   rw,nodev,nosuid,size=2G          0  0
+none    /tmp         tmpfs defaults,                size=512M      0  0
+
+
+#/packages/${1:0:2}/$1/
+
+
+gsettings set org.cinnamon.desktop.default-applications.terminal exec terminator
+gsettings set org.nemo.desktop show-desktop-icons false
+
+
+dd if=/dev/sdX of=output.iso bs=4M
+
+
+font pango:monospace 8
+
+font pango:Ubuntu Mono 14
+
+
+    
+    rm -f /mnt/shared/rtorrent/session/rtorrent.lock
+    
+    
+
+use.tabs.$(file.patterns.py)=0
+tab.size.$(file.patterns.py)=4
+indent.size.$(file.patterns.py)=4
+
+indent.size=4
+use.tabs=0
+tabsize=4
+
+    
+    To reset your NVRAM, you use exactly the same procedure you once used to reset PRAM: Shut down your Mac, press the power button, and as soon as you hear the startup chime, hold down Command-Option-P-R. Keep holding down those keys until you hear a second startup chime. Then let go and allow your Mac to continue starting normally. Then check the Startup Disk, Display, and Date & Time panes of System Preferences to make sure they're set the way you want them.
+    
+    
+    reset your SMC, Disconnect the power cord (either from the Mac or from the AC outlet). Wait 15 seconds and plug it back in. Then wait another 5 seconds and turn the Mac back on.
+    
+    
+Quote=double

@@ -1,0 +1,42 @@
+keycode  80 = KP_Up KP_8 KP_Up KP_8
+keycode  81 = KP_Prior KP_9 KP_Prior KP_9
+keycode  82 = KP_Subtract KP_Subtract KP_Subtract KP_Subtract KP_Subtract KP_Subtract XF86Prev_VMode
+keycode  83 = KP_Left KP_4 KP_Left KP_4
+keycode  84 = KP_Begin KP_5 KP_Begin KP_5
+keycode  85 = KP_Right KP_6 KP_Right KP_6
+keycode  86 = KP_Add KP_Add KP_Add KP_Add KP_Add KP_Add XF86Next_VMode
+keycode  87 = KP_End KP_1 KP_End KP_1
+keycode  88 = KP_Down KP_2 KP_Down KP_2
+keycode  89 = KP_Next KP_3 KP_Next KP_3
+
+keycode 171 = XF86AudioNext NoSymbol XF86AudioNext
+keycode 172 = XF86AudioPlay XF86AudioPause XF86AudioPlay XF86AudioPause
+keycode 173 = XF86AudioPrev NoSymbol XF86AudioPrev
+116
+111
+70
+133
+40
+225
+180
+179
+173
+172
+171
+
+xmodmap -e "keycode 70 = F5"
+
+
+xmodmap -e "keycode 59  = F5"         Adjust backlight intensity
+xmodmap -e "keycode 214 = F5"     Close window
+xmodmap -e "keycode 36 = F5"            Switch screen
+xmodmap -e "keycode  = F5"            Show / Hide desktop
+
+xmodmap -e "keycode 116  = F2"
+xmodmap -e "keycode 111 = F3"  
+xmodmap -e "keycode 225 = F7"
+xmodmap -e "keycode 180 = F8"
+xmodmap -e "keycode 179 = F9"
+xmodmap -e "keycode 173 = F10"
+xmodmap -e "keycode 172 = F11"
+xmodmap -e "keycode 171 = F12"
