@@ -1,0 +1,1 @@
+dd bs=1M if=archlinux-hf-2013-07-22.img of=$1

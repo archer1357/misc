@@ -1,0 +1,1 @@
+find . -iname "*jpg" -exec sh -c 'convert {} -resize 30% ../kk/$(basename "{}")' \;

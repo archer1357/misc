@@ -1,0 +1,105 @@
+
+
+ffmpeg -i "2018.10.31 - 21.14.10.03.mp4" -async 1 -strict -2 -filter:v "crop=1005:564:3:15,scale='iw/1:ih/2'" -b:a 96k  out4.mp4
+ffmpeg -i "out.mp4" -async 1 -strict -2 -vf scale='iw/1:ih/2'  out2.mp4
+
+
+ffmpeg -i "2018.10.31 - 21.14.10.03.mp4" -async 1 -strict -2 -filter:v "crop=1509:850:9:28" out.mp4
+ffmpeg -i in5.mp4 -ss 00:33:01 -t 00:43:58 -async 1 -strict -2 -filter:v "crop=1509:850:123:94" out5.mp4
+ffmpeg -i "05 [720p].ts" -vcodec copy "05 [720p].mpg"
+
+ffmpeg -i in.mp4 -ss 00:02:50 -t 00:02:57 -async 1 -strict -2 out0.mp4 && \
+ffmpeg -i in.mp4 -ss 00:03:14 -t 00:03:22 -async 1 -strict -2 out1.mp4 && \
+ffmpeg -i in.mp4 -ss 00:03:56 -t 00:04:06 -async 1 -strict -2 out2.mp4 && \
+ffmpeg -i in.mp4 -ss 00:05:27 -t 00:05:37 -async 1 -strict -2 out3.mp4
+
+ffmpeg -f concat -i input.txt -codec copy output9.mp4
+
+file 'outt0.m4v'
+file 'outt1.m4v'
+file 'outt2.m4v'
+file 'outt3.m4v'
+
+ffmpeg -i a.mp4 -async 1 -strict -2 -filter:v "crop=1146:690:8:85" rout1.mp4
+
+
+git checkout -b gh-pages
+git checkout master ./3d
+git add foldername
+git push --set-upstream origin gh-pages
+
+
+
+* recursive descent parser
+* shift reduce parser
+* [parenthesized expression](https://en.wikipedia.org/wiki/Operator-precedence_parser#Alternative_methods) parser
+
+
+
+convert 12521-normal.jpg 12521-bump.jpg -compose copy-opacity -composite 12521-relief.png
+
+
+
+
+ffmpeg -i input.avi -c:v libx264 -crf 19 -preset slow -c:a aac -strict experimental -b:a 192k -ac 2 out.mp4
+-b:v 3M
+ffmpeg -i input.avi -c copy -map 0 output.mp4
+ffmpeg -i input.avi -c:v libx264 -crf 19 -preset slow -c:a libvo_aacenc -b:a 192k -ac 2 out.mp4
+                                                      -c:a aac -strict experimental
+													  
+													  
+													  
+
+ffmpeg -i '4.avi' -c copy -map 0 output.mp4											  
+
+ffmpeg -i "05 [720p].ts" -vcodec copy "05 [720p].mpg"
+
+
+./configure --prefix=/usr/local --build x86_64-w64-mingw32
+ 
+convert -density 300 File0008.PDF -level 50x100% -verbose -type Grayscale -depth 8 -compress Group4 output.pdf
+
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/printer -dNOPAUSE -dQUIET -dBATCH -sOutputFile=output2.pdf dfdsfd.pdf
+
+
+ffmpeg -v 5 -y -i input.m4a -acodec libmp3lame -ac 2 -ab 192k output.mp3
+
+
+
+gs -o noIMG.pdf   -sDEVICE=pdfwrite -dFILTERIMAGE                input.pdf
+ gs -o noTXT.pdf   -sDEVICE=pdfwrite -dFILTERTEXT                 input.pdf
+ gs -o noVCT.pdf   -sDEVICE=pdfwrite -dFILTERVECTOR               input.pdf
+
+ gs -o onlyIMG.pdf -sDEVICE=pdfwrite -dFILTERVECTOR -dFILTERTEXT  input.pdf
+ gs -o onlyTXT.pdf -sDEVICE=pdfwrite -dFILTERVECTOR -dFILTERIMAGE input.pdf
+ gs -o onlyVCT.pdf -sDEVICE=pdfwrite -dFILTERIMAGE  -dFILTERTEXT  input.pdf
+ 
+
+ convert 8869-relief.png -channel a -negate 8869-relief2.png
+
+
+
+
+ffmpeg -i "2018.07.14 - 21.12.45.02.mp4" -async 1 -strict -2 -filter:v "crop=1677:944:4:25" "2018.07.14 - 21.12.45.02_out0.mp4"
+
+
+
+ffmpeg -i "2018.07.15 - 22.49.30.05.mp4" -async 1 -strict -2 "2018.07.15 - 22.49.30.05_out0.mp4"
+
+
+
+
+ffmpeg -i "2018.07.15 - 22.49.30.05_1.mp4" -async 1 -strict -2 "2018.07.15 - 22.49.30.05_out1.mp4" && \
+ffmpeg -i "2018.07.15 - 22.49.30.05_2.mp4" -async 1 -strict -2 "2018.07.15 - 22.49.30.05_out2.mp4"
+
+
+
+
+ffmpeg -i in.mp4 -ss 00:08:13 -t 00:08:40 -async 1 -strict -2 -filter:v "crop=1509:850:9:28" out.mp4
+
+
+ffmpeg -i input.mp4 -vcodec libx264 -crf 20 output.mp4
+
+ffmpeg -i "Subnautica 2019.01.21 - 03.08.01.05.DVR.mp4" -crf 20 -vcodec libx264 -ss 00:14:50 -t 00:15:00 -async 1 cut2.mp4
+
+ffmpeg -i aa.mp4 -qscale 0 aa.avi
